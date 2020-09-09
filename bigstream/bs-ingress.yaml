@@ -42,6 +42,7 @@ metadata:
   name: bs-ingress-tokengen
   annotations:
     kubernetes.io/ingress.class: "nginx"
+    nginx.ingress.kubernetes.io/rewrite-target: /$1
 spec:
   rules:
   - host: demo-bs1.bigstream.cloud
@@ -50,4 +51,4 @@ spec:
       - backend:
           serviceName: bigstream-token-generator
           servicePort: 3000
-        path: /token
+        path: /token/(.*)
