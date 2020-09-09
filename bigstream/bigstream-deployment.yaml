@@ -68,7 +68,13 @@ spec:
         volumeMounts:
         - name: bs-storage-data
           mountPath: /var/bigstream/data
+        - name: config-acl
+          mountPath: /app/node-bigstream/conf/acl.json
+          subPath: acl.json
       volumes:
       - name: bs-storage-data
         persistentVolumeClaim:
           claimName: bs-pvclaim
+      - name: config-acl
+        configMap:
+          name: bs-config

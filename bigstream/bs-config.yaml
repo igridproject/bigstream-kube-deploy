@@ -1,0 +1,13 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: bs-config
+  namespace: demo-bs1
+data:
+  acl.json: |-
+    [
+      {"accept":false},
+      {"accept":true,"resource":"demo.*","mode":"+(l|r)"},
+      {"accept":true,"service":"storage","resource":"test.*"},
+      {"accept":true,"service":"storage","resource":"*.pub","mode":"+(l|r)"}
+    ]
