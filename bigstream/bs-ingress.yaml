@@ -35,3 +35,20 @@ spec:
           serviceName: main-bigstream-httpio
           servicePort: 19180
         path: /io/(.*)
+---
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: bs-ingress-tokengen
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+spec:
+  rules:
+  - host: demo-bs1.bigstream.cloud
+    http:
+      paths:
+      - backend:
+          serviceName: main-bigstream-httpio
+          servicePort: 3000
+        path: /token(/|$)(.*)
