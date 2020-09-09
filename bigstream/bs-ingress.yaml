@@ -49,6 +49,6 @@ spec:
     http:
       paths:
       - backend:
-          serviceName: main-bigstream-httpio
+          serviceName: bigstream-token-generator
           servicePort: 3000
         path: /token(/|$)(.*)
