@@ -1,20 +1,37 @@
 apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
 metadata:
-  name: bs-ingress
+  name: bs-ingress-api
   annotations:
     kubernetes.io/ingress.class: "nginx"
     nginx.ingress.kubernetes.io/rewrite-target: /v1.2/$1/$3
 spec:
   rules:
-  - host: demo.bigstream.cloud
+  - host: demo-bs1.bigstream.cloud
     http:
       paths:
       - backend:
-          serviceName: main-bigstream
+          serviceName: main-bigstream-api
           servicePort: 19980
-        path: /bs/(jobs|info)(/|$)(.*)
+        path: /bs1.2/(jobs|info)(/|$)(.*)
       - backend:
-          serviceName: main-bigstream
+          serviceName: main-bigstream-api
           servicePort: 19080
-        path: /bs/(storage|object)(/|$)(.*)
+        path: /bs1.2/(storage|object)(/|$)(.*)
+---
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: bs-ingress-httpio
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    nginx.ingress.kubernetes.io/rewrite-target: /$1
+spec:
+  rules:
+  - host: demo-bs1.bigstream.cloud
+    http:
+      paths:
+      - backend:
+          serviceName: main-bigstream-httpio
+          servicePort: 19180
+        path: /io/(.*)
