@@ -1,0 +1,4 @@
+resources:
+  - redis-deployment.yaml
+  - rabbitmq-deployment.yaml
+  - bigstream-deployment.yaml

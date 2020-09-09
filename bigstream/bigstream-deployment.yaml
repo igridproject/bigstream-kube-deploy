@@ -1,0 +1,73 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: main-bigstream
+  labels:
+    app: bigstream
+spec:
+  ports:
+    - port: 19980
+      name: control-api
+    - port: 19080
+      name: storage-api
+    - port: 19180
+      name: http-listener
+  selector:
+    app: bigstream
+    tier: platform
+  type: LoadBalancer
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: bs-pvclaim
+  labels:
+    app: bigstream
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: nfs
+  resources:
+    requests:
+      storage: 50Gi
+---
+apiVersion: apps/v1 # for versions before 1.9.0 use apps/v1beta2
+kind: Deployment
+metadata:
+  name: bigstream
+  labels:
+    app: bigstream
+spec:
+  selector:
+    matchLabels:
+      app: bigstream
+      tier: platform
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: bigstream
+        tier: platform
+    spec:
+      containers:
+      - image: igridproject/bigstream:1.2.3
+        name: bigstream
+        imagePullPolicy: Always
+        env:
+        - name: BS_SECRET
+          value: bigstream-server
+        ports:
+        - containerPort: 19980
+          name: control-api
+        - containerPort: 19080
+          name: storage-api
+        - containerPort: 19180
+          name: http-listener
+        volumeMounts:
+        - name: bs-storage-data
+          mountPath: /var/bigstream/data
+      volumes:
+      - name: bs-storage-data
+        persistentVolumeClaim:
+          claimName: bs-pvclaim
